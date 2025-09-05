@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import { Button, Box, Sheet, Stack, Typography } from '@mui/joy';
 import { useTasks } from '../lib/tasks';
 import TaskCard from './(components)/TaskCard';
 import QuickActionsBar from './(components)/QuickActionsBar';
@@ -19,48 +20,48 @@ export default function HomePage() {
   }
 
   return (
-    <main className="flex flex-col md:flex-row gap-4 md:gap-6 px-4 pt-4 pb-28 md:pb-4 md:px-6 max-w-[1600px] mx-auto w-full">
+  <Box component="main" sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: { xs: 2, md: 3 }, px: { xs: 2, md: 3 }, pt: 2, pb: { xs: 10, md: 2 }, maxWidth: 1600, mx: 'auto', width: '100%' }}>
       {/* Task List */}
-      <section className="flex-1 md:basis-1/3 flex flex-col gap-4">
-        <header className="flex items-center justify-between">
-          <h1 className="text-base font-semibold text-white">Tasks</h1>
-          <button type="button" onClick={() => setShowNew(true)} className="text-xs bg-accent hover:bg-accent/90 text-white px-3 py-1.5 rounded-md">+ New</button>
-        </header>
+      <Box component="section" sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, flexBasis: { md: '33%' } }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Typography level="title-md">Tasks</Typography>
+          <Button size="sm" onClick={() => setShowNew(true)} variant="solid" color="primary">+ New</Button>
+        </Stack>
         {tasks.length === 0 ? (
           <EmptyState onCreate={() => setShowNew(true)} />
         ) : (
-          <div className="grid gap-3">
+          <Stack gap={1.5}>
             {tasks.map(t => (
               <TaskCard key={t.id} task={t} onOpen={() => openTask(t.id)} onShare={() => alert('Share coming soon')} onDelete={() => tasksApi.remove(t.id)} onDuplicate={() => tasksApi.create({ title: `${t.title} (copy)`, sourceType: t.sourceType, sourceInput: t.sourceInput, frequency: t.frequency, delivery: t.delivery, outputFormat: t.outputFormat, language: t.language, triggerTime: t.triggerTime, timezone: t.timezone })} onEdit={() => alert('Edit placeholder')} />
             ))}
-          </div>
+          </Stack>
         )}
-      </section>
+      </Box>
       {/* Detail Panel (desktop) */}
-      <aside className="hidden md:block md:basis-1/3 bg-card/40 border border-neutral-700 rounded-2xl overflow-hidden min-h-[540px]">
+      <Box component="aside" sx={{ display: { xs: 'none', md: 'block' }, flexBasis: { md: '33%' }, bgcolor: 'background.surface', border: '1px solid', borderColor: 'neutral.outlinedBorder', borderRadius: 'xl', overflow: 'hidden', minHeight: 540 }}>
         <TaskDetailPanel task={selected} onClose={() => select(undefined)} regenerate={tasksApi.regenerate} runOne={tasksApi.runOne} />
-      </aside>
+      </Box>
       {/* Quick Actions (desktop) */}
-      <div className="hidden md:flex md:basis-[220px]">
+      <Box sx={{ display: { xs: 'none', md: 'flex' }, flexBasis: 220 }}>
         <QuickActionsBar onNew={() => setShowNew(true)} onRunAll={runAll} onExport={() => alert('Export coming soon')} />
-      </div>
+      </Box>
 
       {/* Mobile Task Detail Drawer */}
       {mobileDetailOpen && (
-        <div className="md:hidden fixed inset-0 z-30 flex items-end">
-          <div className="absolute inset-0 bg-black/70" onClick={() => setMobileDetailOpen(false)} />
-          <div className="relative w-full h-[70%] bg-surface border-t border-neutral-700 rounded-t-2xl shadow-lg">
+        <Box sx={{ display: { md: 'none' }, position: 'fixed', inset: 0, zIndex: 30, displayPrint: 'none' }}>
+          <Box onClick={() => setMobileDetailOpen(false)} sx={{ position: 'absolute', inset: 0, bgcolor: 'rgba(0,0,0,0.7)' }} />
+          <Sheet variant="solid" sx={{ position: 'relative', mt: 'auto', height: '70%', width: '100%', borderTopLeftRadius: 'lg', borderTopRightRadius: 'lg', border: '1px solid', borderColor: 'neutral.outlinedBorder', bgcolor: 'background.level1' }}>
             <TaskDetailPanel task={selected} onClose={() => setMobileDetailOpen(false)} regenerate={tasksApi.regenerate} runOne={tasksApi.runOne} />
-          </div>
-        </div>
+          </Sheet>
+        </Box>
       )}
 
       {/* Mobile Quick Actions Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-20">
+      <Box sx={{ display: { md: 'none' }, position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 20 }}>
         <QuickActionsBar onNew={() => setShowNew(true)} onRunAll={runAll} onExport={() => alert('Export coming soon')} />
-      </div>
+      </Box>
 
-  <NewTaskDialog open={showNew} onClose={() => setShowNew(false)} create={tasksApi.create} />
-    </main>
+      <NewTaskDialog open={showNew} onClose={() => setShowNew(false)} create={tasksApi.create} />
+    </Box>
   );
 }

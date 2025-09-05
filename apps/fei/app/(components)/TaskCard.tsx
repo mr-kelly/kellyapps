@@ -1,6 +1,7 @@
-'use client';
-import React from 'react';
-import { Task } from '../../lib/tasks';
+"use client";
+import * as React from 'react';
+import type { Task } from '../../lib/tasks';
+import { Card, CardContent, Typography, Chip, Button, IconButton, Dropdown, Menu, MenuButton, MenuItem, Stack } from '@mui/joy';
 
 interface Props {
   task: Task;
@@ -11,54 +12,53 @@ interface Props {
   onEdit: () => void;
 }
 
-const statusStyles: Record<string, string> = {
-  'done-today': 'bg-positive/20 text-positive border border-positive/30',
-  'scheduled': 'bg-neutral-700/30 text-neutral-300 border border-neutral-600',
-  'error': 'bg-danger/20 text-danger border border-danger/40'
+const statusColor: Record<string, 'success' | 'neutral' | 'danger'> = {
+  'done-today': 'success',
+  'scheduled': 'neutral',
+  'error': 'danger'
 };
 
 export function TaskCard({ task, onOpen, onShare, onDelete, onDuplicate, onEdit }: Props) {
   return (
-  <div className="group relative rounded-2xl bg-card shadow-card p-4 flex flex-col gap-3" aria-label={task.title}>
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-white truncate">{task.title}</h3>
-          <div className="mt-1 flex flex-wrap items-center gap-1 text-[10px] text-neutral-400">
-            <span className="px-1.5 py-0.5 rounded bg-neutral-700/40 uppercase tracking-wide">{task.sourceType}:{task.sourceInput}</span>
-            <span className="px-1.5 py-0.5 rounded bg-neutral-700/40">{task.frequency}</span>
-            {task.lastRunAt && (
-              <span className="px-1.5 py-0.5 rounded bg-neutral-800/40" title={task.lastRunAt}>last {new Date(task.lastRunAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-            )}
+    <Card variant="soft" sx={{ borderRadius: 'xl', position: 'relative' }}>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, p: 2 }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={1.5}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <Typography level="title-sm" noWrap>{task.title}</Typography>
+            <Stack direction="row" spacing={0.5} flexWrap="wrap" mt={0.5} sx={{ '--Chip-gap': '4px' }}>
+              <Chip size="sm" variant="soft" color="neutral" sx={{ fontSize: 10, textTransform: 'uppercase' }}>{task.sourceType}:{task.sourceInput}</Chip>
+              <Chip size="sm" variant="soft" color="neutral" sx={{ fontSize: 10 }}>{task.frequency}</Chip>
+              {task.lastRunAt && (
+                <Chip size="sm" variant="soft" color="neutral" sx={{ fontSize: 10 }} title={task.lastRunAt}>last {new Date(task.lastRunAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Chip>
+              )}
+            </Stack>
           </div>
-        </div>
-        <div className={`text-[10px] font-medium px-2 py-1 rounded-full ${statusStyles[task.status]} select-none`}>{task.status === 'done-today' ? 'Done today' : task.status === 'scheduled' ? 'Scheduled' : 'Error'}</div>
-      </div>
-      <div className="flex gap-2">
-  <button type="button" onClick={onOpen} className="flex-1 text-xs bg-accent hover:bg-accent/90 text-white px-3 py-1.5 rounded-md font-medium focus:outline-none focus:ring-2 ring-accent/50">Open Summary</button>
-  <button type="button" onClick={onShare} className="text-xs bg-neutral-700 hover:bg-neutral-600 text-neutral-100 px-3 py-1.5 rounded-md font-medium focus:outline-none focus:ring-2 ring-neutral-500">Share</button>
-      </div>
-      <div className="absolute top-2 right-2">
-        <Menu onEdit={onEdit} onDuplicate={onDuplicate} onDelete={onDelete} />
-      </div>
-    </div>
+          <Chip size="sm" variant="soft" color={statusColor[task.status]} sx={{ fontSize: 10 }}>
+            {task.status === 'done-today' ? 'Done today' : task.status === 'scheduled' ? 'Scheduled' : 'Error'}
+          </Chip>
+          <TaskMenu onEdit={onEdit} onDuplicate={onDuplicate} onDelete={onDelete} />
+        </Stack>
+        <Stack direction="row" spacing={1}>
+          <Button onClick={onOpen} size="sm" variant="solid" color="primary" sx={{ flex: 1 }}>Open Summary</Button>
+          <Button onClick={onShare} size="sm" variant="soft" sx={{ minWidth: 80 }}>Share</Button>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
 
-function Menu({ onEdit, onDuplicate, onDelete }: { onEdit: () => void; onDuplicate: () => void; onDelete: () => void; }) {
-  const [open, setOpen] = React.useState(false);
+function TaskMenu({ onEdit, onDuplicate, onDelete }: { onEdit: () => void; onDuplicate: () => void; onDelete: () => void; }) {
   return (
-    <div className="relative">
-  <button type="button" aria-label="Task menu" onClick={() => setOpen(o => !o)} className="p-1 rounded hover:bg-neutral-600/50 focus:outline-none focus:ring-2 ring-accent/50">
-        <span className="block w-4 h-4 text-neutral-300">⋮</span>
-      </button>
-      {open && (
-        <div className="absolute right-0 mt-1 w-40 bg-card border border-neutral-700 rounded-md shadow-lg z-10 py-1 text-xs">
-          <button type="button" onClick={() => { onEdit(); setOpen(false); }} className="w-full text-left px-3 py-1.5 hover:bg-neutral-700/50">Edit</button>
-          <button type="button" onClick={() => { onDuplicate(); setOpen(false); }} className="w-full text-left px-3 py-1.5 hover:bg-neutral-700/50">Duplicate</button>
-          <button type="button" onClick={() => { onDelete(); setOpen(false); }} className="w-full text-left px-3 py-1.5 text-danger hover:bg-danger/20">Delete</button>
-        </div>
-      )}
-    </div>
+    <Dropdown>
+      <MenuButton slots={{ root: IconButton }} slotProps={{ root: { size: 'sm', variant: 'plain', color: 'neutral' } }}>
+        ⋮
+      </MenuButton>
+      <Menu size="sm" placement="bottom-end">
+        <MenuItem onClick={onEdit}>Edit</MenuItem>
+        <MenuItem onClick={onDuplicate}>Duplicate</MenuItem>
+        <MenuItem color="danger" onClick={onDelete}>Delete</MenuItem>
+      </Menu>
+    </Dropdown>
   );
 }
 

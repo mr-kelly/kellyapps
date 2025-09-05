@@ -1,5 +1,6 @@
 import './globals.css';
-import React from 'react';
+import type React from 'react';
+import { ThemeProvider } from './ThemeProvider';
 
 export const metadata = {
   title: 'Daily News Summary Agent',
@@ -9,8 +10,8 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-surface text-neutral-200">
-        {children}
+      <body className="min-h-screen">
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

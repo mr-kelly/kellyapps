@@ -1,5 +1,6 @@
-'use client';
-import React from 'react';
+"use client";
+import * as React from 'react';
+import { Sheet, Button, Stack } from '@mui/joy';
 
 interface Props {
   onNew: () => void;
@@ -10,11 +11,24 @@ interface Props {
 
 export function QuickActionsBar({ onNew, onRunAll, onExport, running }: Props) {
   return (
-    <div className="flex md:flex-col gap-2 md:gap-3 p-3 md:p-4 bg-card/60 backdrop-blur supports-[backdrop-filter]:bg-card/70 border-t md:border border-neutral-700 md:rounded-2xl shadow-card w-full md:w-52">
-      <button type="button" onClick={onNew} className="flex-1 md:w-full bg-accent hover:bg-accent/90 text-white text-sm font-medium py-2 rounded-md focus:outline-none focus:ring-2 ring-accent/50">+ New Task</button>
-      <button type="button" onClick={onRunAll} disabled={running} className="flex-1 md:w-full bg-neutral-700 disabled:opacity-40 hover:bg-neutral-600 text-neutral-100 text-sm font-medium py-2 rounded-md focus:outline-none focus:ring-2 ring-neutral-500">Run All Now</button>
-      <button type="button" onClick={onExport} className="flex-1 md:w-full bg-neutral-700 hover:bg-neutral-600 text-neutral-100 text-sm font-medium py-2 rounded-md focus:outline-none focus:ring-2 ring-neutral-500">Export Today</button>
-    </div>
+    <Sheet
+      variant="soft"
+      sx={{
+        backdropFilter: 'blur(8px)',
+        p: 2,
+        display: 'flex',
+        flexDirection: { xs: 'row', md: 'column' },
+        gap: { xs: 1.5, md: 2 },
+        borderRadius: { md: 'lg' },
+        width: { md: 208 },
+        border: '1px solid',
+        borderColor: 'neutral.outlinedBorder'
+      }}
+    >
+      <Button onClick={onNew} size="sm" color="primary" variant="solid" sx={{ flex: 1 }}>+ New Task</Button>
+      <Button onClick={onRunAll} size="sm" disabled={running} variant="soft" sx={{ flex: 1 }}>Run All Now</Button>
+      <Button onClick={onExport} size="sm" variant="soft" sx={{ flex: 1 }}>Export Today</Button>
+    </Sheet>
   );
 }
 

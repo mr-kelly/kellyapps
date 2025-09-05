@@ -1,6 +1,7 @@
-'use client';
-import React from 'react';
-import { Task } from '../../lib/tasks';
+"use client";
+import * as React from 'react';
+import type { Task } from '../../lib/tasks';
+import { Box, Typography, Button, Sheet, Stack, Divider, Chip } from '@mui/joy';
 
 interface Props {
   task?: Task;
@@ -11,58 +12,58 @@ interface Props {
 
 export function TaskDetailPanel({ task, onClose, regenerate, runOne }: Props) {
   if (!task) return (
-    <div className="hidden md:flex flex-col items-center justify-center text-neutral-500 text-sm">Select a task</div>
+    <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', justifyContent: 'center', color: 'neutral.500', fontSize: 13 }}>Select a task</Box>
   );
   const summary = task.lastSummary;
   const isZh = task.language === 'zh-HK';
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-start justify-between gap-3 py-3 md:py-4 px-4 border-b border-neutral-700">
-        <div className="flex flex-col">
-          <h2 className="text-sm font-semibold text-white">{task.title}</h2>
-          <span className="text-[10px] text-neutral-400">{task.status === 'done-today' ? (isZh ? '今日已生成' : 'Generated today') : task.status}</span>
-        </div>
-        <button type="button" onClick={onClose} className="md:hidden text-neutral-400 hover:text-neutral-200 text-sm px-2 py-1">Close</button>
-      </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        <section className="bg-card rounded-xl border border-neutral-700 p-4">
-          <header className="flex items-center justify-between mb-3">
-            <h3 className="text-xs font-semibold tracking-wide text-neutral-300">{isZh ? '今日摘要' : `Today's Summary`} ({task.timezone})</h3>
-            <div className="flex gap-1">
-              <button type="button" onClick={() => navigator.clipboard.writeText(formatSummary(task))} className="px-2 py-1 rounded-md bg-neutral-700 hover:bg-neutral-600 text-[11px]">Copy</button>
-              <button type="button" onClick={() => alert('Share: Coming soon')} className="px-2 py-1 rounded-md bg-neutral-700 hover:bg-neutral-600 text-[11px]">Share</button>
-              <button type="button" onClick={() => alert('PDF: Coming soon')} className="px-2 py-1 rounded-md bg-neutral-700 hover:bg-neutral-600 text-[11px]">PDF</button>
-              <button type="button" onClick={() => alert('PPT: Coming soon')} className="px-2 py-1 rounded-md bg-neutral-700 hover:bg-neutral-600 text-[11px]">PPT</button>
-            </div>
-          </header>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" px={2} py={1.5} sx={{ borderBottom: '1px solid', borderColor: 'neutral.outlinedBorder' }}>
+        <Box>
+          <Typography level="title-sm">{task.title}</Typography>
+          <Typography level="body-xs" color="neutral">{task.status === 'done-today' ? (isZh ? '今日已生成' : 'Generated today') : task.status}</Typography>
+        </Box>
+        <Button onClick={onClose} size="sm" variant="plain" color="neutral" sx={{ display: { md: 'none' } }}>Close</Button>
+      </Stack>
+      <Box sx={{ flex: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Sheet variant="outlined" sx={{ p: 2, borderRadius: 'lg' }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1.5}>
+            <Typography level="body-xs" fontWeight={600}>{isZh ? '今日摘要' : `Today's Summary`} ({task.timezone})</Typography>
+            <Stack direction="row" spacing={0.5}>
+              <Button onClick={() => navigator.clipboard.writeText(formatSummary(task))} size="sm" variant="soft">Copy</Button>
+              <Button onClick={() => alert('Share: Coming soon')} size="sm" variant="soft">Share</Button>
+              <Button onClick={() => alert('PDF: Coming soon')} size="sm" variant="soft">PDF</Button>
+              <Button onClick={() => alert('PPT: Coming soon')} size="sm" variant="soft">PPT</Button>
+            </Stack>
+          </Stack>
           {summary ? (
-            <div className="space-y-5 text-[13px] leading-relaxed">
-              <div>
-                <h4 className="text-neutral-200 font-medium mb-1">{isZh ? '五大標題' : 'Top 5 Headlines'}</h4>
-                <ul className="list-disc pl-5 space-y-1">
-                  {summary.headlines.map((h,i) => <li key={i}>{h}</li>)}
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-neutral-200 font-medium mb-1">{isZh ? '三大要點' : '3 Key Takeaways'}</h4>
-                <ol className="list-decimal pl-5 space-y-1">
-                  {summary.takeaways.map((t,i) => <li key={i}>{t}</li>)}
-                </ol>
-              </div>
-              <p className="text-[10px] text-neutral-500">{task.lastRunAt && (isZh ? '生成時間' : 'Generated at')} {task.lastRunAt && new Date(task.lastRunAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} {task.timezone}</p>
-            </div>
+            <Stack spacing={3} sx={{ fontSize: 13, lineHeight: 1.55 }}>
+              <Box>
+                <Typography level="body-sm" fontWeight={500} mb={0.5}>{isZh ? '五大標題' : 'Top 5 Headlines'}</Typography>
+                <Box component="ul" sx={{ pl: 2.5, m: 0, listStyle: 'disc', display: 'grid', gap: 0.5 }}>
+                  {summary.headlines.map(h => <li key={h}>{h}</li>)}
+                </Box>
+              </Box>
+              <Box>
+                <Typography level="body-sm" fontWeight={500} mb={0.5}>{isZh ? '三大要點' : '3 Key Takeaways'}</Typography>
+                <Box component="ol" sx={{ pl: 2.5, m: 0, listStyle: 'decimal', display: 'grid', gap: 0.5 }}>
+                  {summary.takeaways.map(t => <li key={t}>{t}</li>)}
+                </Box>
+              </Box>
+              <Typography level="body-xs" color="neutral">{task.lastRunAt && (isZh ? '生成時間' : 'Generated at')} {task.lastRunAt && new Date(task.lastRunAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} {task.timezone}</Typography>
+            </Stack>
           ) : (
-            <div className="text-neutral-500 text-xs">{isZh ? '尚未生成摘要。' : 'No summary yet.'}</div>
+            <Typography level="body-xs" color="neutral">{isZh ? '尚未生成摘要。' : 'No summary yet.'}</Typography>
           )}
-        </section>
-        <div className="flex gap-2">
-          <button type="button" onClick={() => regenerate(task.id)} className="px-3 py-2 rounded-md bg-accent text-white text-xs font-medium">{isZh ? '重新生成' : 'Regenerate'}</button>
+        </Sheet>
+        <Stack direction="row" spacing={1}>
+          <Button onClick={() => regenerate(task.id)} size="sm" variant="solid" color="primary">{isZh ? '重新生成' : 'Regenerate'}</Button>
           {task.status === 'error' && (
-            <button type="button" onClick={() => runOne(task.id)} className="px-3 py-2 rounded-md bg-danger/80 hover:bg-danger text-white text-xs font-medium">{isZh ? '重試' : 'Retry'}</button>
+            <Button onClick={() => runOne(task.id)} size="sm" variant="solid" color="danger">{isZh ? '重試' : 'Retry'}</Button>
           )}
-        </div>
-      </div>
-    </div>
+        </Stack>
+      </Box>
+    </Box>
   );
 }
 

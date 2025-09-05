@@ -5,7 +5,9 @@
     "allowJs": true,
     "noEmit": true,
     "types": [
-      "node"
+      "node",
+      "react",
+      "react-dom"
     ],
     "lib": [
       "dom",
