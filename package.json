@@ -13,10 +13,12 @@
     "dev:all": "pnpm -r --parallel run dev",
     "lint": "biome check .",
     "format": "biome format .",
-    "test": "pnpm -r run test"
+  "test": "pnpm -r run test",
+  "prepare": "lefthook install"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.7.0",
-    "tsx": "^4.16.2"
+    "tsx": "^4.16.2",
+    "lefthook": "^1.7.0"
   }
 }

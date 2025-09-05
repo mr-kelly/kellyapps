@@ -1,0 +1,15 @@
+pre-commit:
+  parallel: true
+  commands:
+    biome-format:
+      run: pnpm biome check --write --unsafe {staged_files}
+      glob: "*.{ts,tsx,js,jsx,json}"
+    organize-imports:
+      run: pnpm biome check --write {staged_files}
+      glob: "*.{ts,tsx,js,jsx}"
+
+# Optional: add a lint (no write) phase on pre-push
+pre-push:
+  commands:
+    biome-check:
+      run: pnpm biome check .

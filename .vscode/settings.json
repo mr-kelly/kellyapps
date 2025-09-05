@@ -1,0 +1,20 @@
+{
+  // Enable format on save
+  "editor.formatOnSave": true,
+  // Run Biome on save as a code action
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.organizeImports": "always",
+    "source.fixAll.biome": "always"
+  },
+  // Default formatter to biome for supported languages
+  "[typescript]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[typescriptreact]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[javascript]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[javascriptreact]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[json]": { "editor.defaultFormatter": "biomejs.biome" },
+  // Allow explicit code actions to trigger automatically
+  "biome.enabled": true,
+  // Optional: show biome inline diagnostics
+  "biome.diagnostics.enable": true
+}
