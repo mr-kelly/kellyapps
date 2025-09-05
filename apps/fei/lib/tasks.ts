@@ -40,10 +40,10 @@ function fakeSummary(title: string, tz: 'HKT' | 'ET', lang: 'en' | 'zh-HK'): Tas
   const base = title.replace(/[^a-zA-Z0-9 ]/g, '').split(' ')[0] || 'Market';
   const headlinesEn = [
     `${base} futures edge higher amid cautious sentiment`,
-    `Liquidity watch: funding rates steady across majors`,
-    `Regulatory focus intensifies on cross-border flows`,
-    `Analysts highlight rotation into quality balance sheets`,
-    `Volatility suppressed as participants await catalysts`
+    'Liquidity watch: funding rates steady across majors',
+    'Regulatory focus intensifies on cross-border flows',
+    'Analysts highlight rotation into quality balance sheets',
+    'Volatility suppressed as participants await catalysts'
   ];
   const takeawaysEn = [
     'Maintain disciplined positioning into macro prints',
