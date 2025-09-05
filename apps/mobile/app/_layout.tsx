@@ -9,7 +9,19 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { TRPCProvider } from "../trpcClient";
+import { TRPCProvider } from "@fincy/domains/trpcClient";
+import Constants from "expo-constants";
+
+function getBaseUrl() {
+	if (typeof window !== "undefined") return ""; // web
+	const debuggerHost = (Constants as { expoConfig?: { hostUri?: string } })
+		.expoConfig?.hostUri;
+	if (debuggerHost) {
+		const host = debuggerHost.split(":")[0];
+		return `http://${host}:3000`;
+	}
+	return "http://localhost:3000";
+}
 
 export default function RootLayout() {
 	const colorScheme = useColorScheme();
@@ -23,7 +35,7 @@ export default function RootLayout() {
 	}
 
 	return (
-		<TRPCProvider>
+		<TRPCProvider baseUrl={getBaseUrl()}>
 			<ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
 				<Stack>
 					<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
