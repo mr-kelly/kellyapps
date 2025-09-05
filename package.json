@@ -1,24 +1,21 @@
 {
-  "name": "kellyapps-monorepo",
-  "private": true,
-  "version": "0.2.0",
-  "packageManager": "pnpm@10.15.1",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "pnpm -r run build",
-    "dev": "pnpm --filter @kellyapps/fei dev",
-    "dev:all": "pnpm -r --parallel run dev",
-    "lint": "biome check .",
-    "format": "biome format .",
-  "test": "pnpm -r run test",
-  "prepare": "lefthook install"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.7.0",
-    "tsx": "^4.16.2",
-    "lefthook": "^1.7.0"
-  }
+	"name": "kellyapps-monorepo",
+	"private": true,
+	"version": "0.2.0",
+	"packageManager": "pnpm@10.15.1",
+	"workspaces": ["apps/*", "packages/*"],
+	"scripts": {
+		"build": "pnpm -r run build",
+		"dev": "pnpm --filter @kellyapps/fei dev",
+		"dev:all": "pnpm -r --parallel run dev",
+		"lint": "biome check .",
+		"format": "biome format .",
+		"test": "pnpm -r run test",
+		"prepare": "lefthook install"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.7.0",
+		"tsx": "^4.16.2",
+		"lefthook": "^1.7.0"
+	}
 }
