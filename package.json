@@ -8,8 +8,7 @@
 		"build": "pnpm -r run build",
 		"dev": "pnpm --filter @kellyapps/fei dev",
 		"dev:all": "pnpm -r --parallel run dev",
-		"lint": "biome check .",
-		"format": "biome format .",
+		"lint": "biome format . --write && biome check .",
 		"test": "pnpm -r run test",
 		"prepare": "lefthook install"
 	},
