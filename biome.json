@@ -6,6 +6,6 @@
 		"rules": { "recommended": true }
 	},
 	"files": {
-		"ignore": ["dist", ".next", "node_modules", ".expo"]
+		"ignore": ["dist", ".next", "node_modules", ".expo", "*.d.ts"]
 	}
 }
