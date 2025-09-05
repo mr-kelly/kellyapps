@@ -1,4 +1,4 @@
-import { prisma } from "../../../lib/db";
+import { prisma } from "@fincy/domains/prisma";
 
 export async function GET() {
 	const users = await prisma.user.findMany({

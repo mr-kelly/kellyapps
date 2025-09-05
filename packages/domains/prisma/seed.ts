@@ -1,4 +1,4 @@
-import { prisma } from "../lib/db";
+import { prisma } from ".";
 
 async function main() {
 	const user = await prisma.user.upsert({
@@ -14,7 +14,7 @@ async function main() {
 			published: true,
 		},
 	});
-	console.log("Seed complete");
+	console.log("Seed complete (domains)");
 }
 
 main().finally(async () => {

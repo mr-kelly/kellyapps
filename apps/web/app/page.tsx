@@ -1,6 +1,7 @@
 "use client";
 import { Box, Button, Sheet, Stack, Typography } from "@mui/joy";
 import React from "react";
+import { trpc } from "../../../packages/domains/trpcClient";
 import { useTasks } from "../lib/tasks";
 import EmptyState from "./(components)/EmptyState";
 import NewTaskDialog from "./(components)/NewTaskDialog";
@@ -10,6 +11,7 @@ import TaskDetailPanel from "./(components)/TaskDetailPanel";
 
 export default function HomePage() {
 	const tasksApi = useTasks();
+	const hello = trpc.tasks.hello.useQuery({ name: "Web" });
 	const { tasks, selected, select, runAll } = tasksApi;
 	const [showNew, setShowNew] = React.useState(false);
 	const [mobileDetailOpen, setMobileDetailOpen] = React.useState(false);
@@ -51,6 +53,9 @@ export default function HomePage() {
 					alignItems="center"
 				>
 					<Typography level="title-md">Tasks</Typography>
+					<Typography level="body-sm" color="neutral">
+						{hello.data?.greeting}
+					</Typography>
 					<Button
 						size="sm"
 						onClick={() => setShowNew(true)}

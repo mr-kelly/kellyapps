@@ -1,3 +1,4 @@
+import { TRPCProvider } from "@fincy/domains/trpcClient";
 import type React from "react";
 import "./globals.css";
 import { ThemeProvider } from "./ThemeProvider";
@@ -13,7 +14,9 @@ export default function RootLayout({
 	return (
 		<html lang="en" className="dark">
 			<body className="min-h-screen">
-				<ThemeProvider>{children}</ThemeProvider>
+				<TRPCProvider>
+					<ThemeProvider>{children}</ThemeProvider>
+				</TRPCProvider>
 			</body>
 		</html>
 	);

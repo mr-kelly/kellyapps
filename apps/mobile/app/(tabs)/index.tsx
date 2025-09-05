@@ -5,8 +5,10 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { trpc } from "../../trpcClient";
 
 export default function HomeScreen() {
+	const hello = trpc.tasks.hello.useQuery({ name: "Expo" });
 	return (
 		<ParallaxScrollView
 			headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -23,6 +25,9 @@ export default function HomeScreen() {
 			</ThemedView>
 			<ThemedView style={styles.stepContainer}>
 				<ThemedText type="subtitle">Step 1: Try it</ThemedText>
+				<ThemedText>
+					{hello.data ? hello.data.greeting : "Loading tRPC..."}
+				</ThemedText>
 				<ThemedText>
 					Edit{" "}
 					<ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}

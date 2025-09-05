@@ -1,4 +1,3 @@
-// Prisma schema for fei app
 datasource db {
   provider = "postgresql"
   url      = env("PG_DATABASE_URL")
