@@ -1,29 +1,29 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "jsx": "preserve",
-    "allowJs": true,
-    "noEmit": true,
-    "types": ["node", "react", "react-dom"],
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "incremental": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
-  },
-  "paths": {
-    "@/*": ["./*"]
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "../../packages/domains/trpcClient.tsx"
-  ],
-  "exclude": ["node_modules"]
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"jsx": "preserve",
+		"allowJs": true,
+		"noEmit": true,
+		"types": ["node", "react", "react-dom"],
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"incremental": true,
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"plugins": [
+			{
+				"name": "next"
+			}
+		]
+	},
+	"paths": {
+		"@/*": ["./*"]
+	},
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		"../../packages/domains/trpcClient.tsx"
+	],
+	"exclude": ["node_modules"]
 }
