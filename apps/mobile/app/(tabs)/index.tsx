@@ -5,9 +5,10 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { trpc } from "@fincy/domains/trpcClient";
+import { useTRPC } from "@fincy/domains/trpcClient";
 
 export default function HomeScreen() {
+	const trpc = useTRPC();
 	const hello = trpc.tasks.hello.useQuery({ name: "Expo" });
 	return (
 		<ParallaxScrollView
