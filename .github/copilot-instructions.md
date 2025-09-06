@@ -53,6 +53,7 @@ It includes multiple packages (SDKs, servers, and Next.js apps, Expo apps) that 
 - **Zod v4** schemas are mandatory for runtime validation.
 - Follow **TSDoc style** for public APIs.
 - Use **tree-shaking friendly exports** (no giant `index.ts` barrels, prefer per-module exports).
+- @fincy/domains/ui-web, @fincy/domains/ui-mobile，尽量不要用 index.ts 导出, for better tree-shaking.
 - Imports must be ordered: built-ins → external → internal.
 - For React:
   - Use **functional components + hooks only**.

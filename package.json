@@ -8,7 +8,7 @@
 		"build": "pnpm -r run build",
 		"dev": "concurrently -n web,mobile -c blue,green \"pnpm --filter @fincy/web dev\" \"pnpm --filter @fincy/mobile start\"",
 		"dev:all": "pnpm -r --parallel run dev",
-		"lint": "biome format . --write && biome check .",
+		"lint": "biome format . --write && biome check . --write",
 		"test": "pnpm -r run test",
 		"prepare": "lefthook install"
 	},
