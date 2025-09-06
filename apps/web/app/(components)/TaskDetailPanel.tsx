@@ -63,9 +63,7 @@ export function TaskDetailPanel({ task, onClose, regenerate, runOne }: Props) {
 				id: task.id,
 				patch: { title, frequency, language: langForApi, delivery },
 			},
-			{
-				onSuccess: () => setEditing(false),
-			},
+			{ onSuccess: () => setEditing(false) },
 		);
 	}
 	return (
@@ -240,7 +238,7 @@ export function TaskDetailPanel({ task, onClose, regenerate, runOne }: Props) {
 										gap: 0.5,
 									}}
 								>
-									{summary.headlines.map((h) => (
+									{summary.headlines.map((h: string) => (
 										<li key={h}>{h}</li>
 									))}
 								</Box>
@@ -259,7 +257,7 @@ export function TaskDetailPanel({ task, onClose, regenerate, runOne }: Props) {
 										gap: 0.5,
 									}}
 								>
-									{summary.takeaways.map((t) => (
+									{summary.takeaways.map((t: string) => (
 										<li key={t}>{t}</li>
 									))}
 								</Box>
@@ -307,5 +305,5 @@ export function TaskDetailPanel({ task, onClose, regenerate, runOne }: Props) {
 
 function formatSummary(task: Task) {
 	if (!task.lastSummary) return "";
-	return `${task.title}\n${task.lastSummary.headlines.map((h) => `- ${h}`).join("\n")}\n${task.lastSummary.takeaways.map((t, i) => `${i + 1}. ${t}`).join("\n")}`;
+	return `${task.title}\n${task.lastSummary.headlines.map((h: string) => `- ${h}`).join("\n")}\n${task.lastSummary.takeaways.map((t: string, i: number) => `${i + 1}. ${t}`).join("\n")}`;
 }

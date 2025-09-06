@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
-const config = {
-	experimental: {
-		typedRoutes: true,
-	},
+const nextConfig = {
+	reactStrictMode: true,
+	typedRoutes: true,
+	output: "standalone",
+	transpilePackages: ["@fincy/domains"],
 };
-export default config;
+
+export default nextConfig;

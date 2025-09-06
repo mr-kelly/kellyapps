@@ -5,6 +5,7 @@
 	"exports": {
 		"./*": "./*.ts",
 		"./*.tsx": "./*.tsx",
+		"./types/*": "./types/*.ts",
 		"./trpc": "./trpc/index.ts",
 		"./trpcClient": "./trpcClient.tsx",
 		"./prisma": "./prisma/index.ts"

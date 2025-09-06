@@ -1,5 +1,4 @@
 "use client";
-import CssBaseline from "@mui/joy/CssBaseline";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
 import type { ReactNode } from "react";
 
@@ -19,9 +18,7 @@ const theme = extendTheme({
 			},
 		},
 	},
-	fontFamily: {
-		body: "system-ui, ui-sans-serif, sans-serif",
-	},
+	fontFamily: { body: "system-ui, ui-sans-serif, sans-serif" },
 	shadow: {
 		sm: "0 2px 4px -1px rgba(0,0,0,0.4), 0 4px 12px -2px rgba(0,0,0,0.3)",
 	},
@@ -30,7 +27,6 @@ const theme = extendTheme({
 export function ThemeProvider({ children }: { children: ReactNode }) {
 	return (
 		<CssVarsProvider theme={theme} defaultMode="dark" disableTransitionOnChange>
-			<CssBaseline />
 			{children}
 		</CssVarsProvider>
 	);

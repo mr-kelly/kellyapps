@@ -1,11 +1,11 @@
 import { TRPCProvider } from "@fincy/domains/trpcClient";
-import type React from "react";
+import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "./ThemeProvider";
 
-export const metadata = {
-	title: "Daily News Summary Agent",
-	description: "Finance briefing task center demo",
+export const metadata: Metadata = {
+	title: "Fincy Web",
+	description: "Fresh Next.js app",
 };
 
 export default function RootLayout({
