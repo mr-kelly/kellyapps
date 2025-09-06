@@ -1,8 +1,9 @@
 "use client";
+import { useTRPC } from "@fincy/domains/trpcClient";
+import type { Task } from "@fincy/domains/types/task";
 import { Box, Button, Sheet, Stack, Typography } from "@mui/joy";
+import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
-import { trpc } from "../../../packages/domains/trpcClient";
-import { useTasks } from "../lib/tasks";
 import EmptyState from "./(components)/EmptyState";
 import NewTaskDialog from "./(components)/NewTaskDialog";
 import QuickActionsBar from "./(components)/QuickActionsBar";
@@ -10,16 +11,98 @@ import TaskCard from "./(components)/TaskCard";
 import TaskDetailPanel from "./(components)/TaskDetailPanel";
 
 export default function HomePage() {
-	const tasksApi = useTasks();
+	const trpc = useTRPC();
+	const listQuery = trpc.tasks.list.useQuery();
+	const queryClient = useQueryClient();
+	const createMutation = trpc.tasks.create.useMutation({
+		onSuccess: () => listQuery.refetch(),
+	});
+	const removeMutation = trpc.tasks.remove.useMutation({
+		onSuccess: () => listQuery.refetch(),
+	});
+	type TaskRow = {
+		id: string;
+		title: string;
+		status: string;
+		sourceType: string;
+		sourceInput: string;
+		frequency: string;
+		delivery: string[];
+		outputFormat: string;
+		language: string;
+		triggerTime: string;
+		timezone: string;
+		lastRunAt: Date | null;
+		nextRunAt: Date | null;
+		lastSummary: unknown | null;
+		createdAt: Date;
+		updatedAt: Date;
+	};
+	const runMutation = trpc.tasks.run.useMutation({
+		onMutate: async (vars) => {
+			const key = ["tasks", "list"] as const;
+			await queryClient.cancelQueries({ queryKey: key });
+			const prev = queryClient.getQueryData<TaskRow[]>(key);
+			if (prev) {
+				queryClient.setQueryData<TaskRow[]>(
+					key,
+					prev.map((t) =>
+						t.id === vars.id ? { ...t, status: "done_today" } : t,
+					),
+				);
+			}
+			return { prev };
+		},
+		onError: (_err, _vars, ctx) => {
+			const key = ["tasks", "list"] as const;
+			if (ctx?.prev) queryClient.setQueryData(key, ctx.prev);
+		},
+		onSettled: () => listQuery.refetch(),
+	});
+	const runAllMutation = trpc.tasks.runAll.useMutation({
+		onMutate: async () => {
+			const key = ["tasks", "list"] as const;
+			await queryClient.cancelQueries({ queryKey: key });
+			const prev = queryClient.getQueryData<Task[]>(key);
+			if (prev) {
+				queryClient.setQueryData<Task[]>(
+					key,
+					prev.map((t) => ({ ...t, status: "done_today" })),
+				);
+			}
+			return { prev };
+		},
+		onError: (_e, _v, ctx) => {
+			const key = ["tasks", "list"] as const;
+			if (ctx?.prev) queryClient.setQueryData(key, ctx.prev);
+		},
+		onSettled: () => listQuery.refetch(),
+	});
 	const hello = trpc.tasks.hello.useQuery({ name: "Web" });
-	const { tasks, selected, select, runAll } = tasksApi;
+	const tasks: Task[] = (listQuery.data as Task[] | undefined) ?? [];
+	const [selectedId, setSelectedId] = React.useState<string | undefined>();
+	const selected = tasks.find((t) => t.id === selectedId);
 	const [showNew, setShowNew] = React.useState(false);
 	const [mobileDetailOpen, setMobileDetailOpen] = React.useState(false);
 
 	function openTask(id: string) {
-		select(id);
+		setSelectedId(id);
 		setMobileDetailOpen(true);
 	}
+	const runAll = () => runAllMutation.mutate();
+	const create = (partial: { title: string }) => {
+		createMutation.mutate({
+			title: partial.title,
+			sourceType: "url",
+			sourceInput: "",
+			frequency: "daily",
+			delivery: ["in-app"],
+			outputFormat: "summary",
+			language: "en",
+			triggerTime: "07:30",
+			timezone: "HKT",
+		});
+	};
 
 	return (
 		<Box
@@ -75,20 +158,8 @@ export default function HomePage() {
 								task={t}
 								onOpen={() => openTask(t.id)}
 								onShare={() => alert("Share coming soon")}
-								onDelete={() => tasksApi.remove(t.id)}
-								onDuplicate={() =>
-									tasksApi.create({
-										title: `${t.title} (copy)`,
-										sourceType: t.sourceType,
-										sourceInput: t.sourceInput,
-										frequency: t.frequency,
-										delivery: t.delivery,
-										outputFormat: t.outputFormat,
-										language: t.language,
-										triggerTime: t.triggerTime,
-										timezone: t.timezone,
-									})
-								}
+								onDelete={() => removeMutation.mutate({ id: t.id })}
+								onDuplicate={() => create({ title: `${t.title} (copy)` })}
 								onEdit={() => alert("Edit placeholder")}
 							/>
 						))}
@@ -111,9 +182,9 @@ export default function HomePage() {
 			>
 				<TaskDetailPanel
 					task={selected}
-					onClose={() => select(undefined)}
-					regenerate={tasksApi.regenerate}
-					runOne={tasksApi.runOne}
+					onClose={() => setSelectedId(undefined)}
+					regenerate={(id) => runMutation.mutate({ id })}
+					runOne={(id) => runMutation.mutate({ id })}
 				/>
 			</Box>
 			{/* Quick Actions (desktop) */}
@@ -157,8 +228,8 @@ export default function HomePage() {
 						<TaskDetailPanel
 							task={selected}
 							onClose={() => setMobileDetailOpen(false)}
-							regenerate={tasksApi.regenerate}
-							runOne={tasksApi.runOne}
+							regenerate={(id) => runMutation.mutate({ id })}
+							runOne={(id) => runMutation.mutate({ id })}
 						/>
 					</Sheet>
 				</Box>
@@ -185,7 +256,7 @@ export default function HomePage() {
 			<NewTaskDialog
 				open={showNew}
 				onClose={() => setShowNew(false)}
-				create={tasksApi.create}
+				create={(p) => create({ title: p.title })}
 			/>
 		</Box>
 	);

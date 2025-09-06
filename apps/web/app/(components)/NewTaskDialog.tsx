@@ -1,4 +1,9 @@
 "use client";
+import type {
+	Delivery,
+	Frequency,
+	SourceType,
+} from "@fincy/domains/types/task";
 import {
 	Button,
 	Chip,
@@ -14,7 +19,6 @@ import {
 	Stack,
 } from "@mui/joy";
 import * as React from "react";
-import type { Delivery, Frequency, SourceType } from "../../lib/tasks";
 
 interface NewTaskInput {
 	title: string;
@@ -22,7 +26,7 @@ interface NewTaskInput {
 	sourceInput: string;
 	frequency: Frequency;
 	delivery: Delivery[];
-	language: "en" | "zh-HK";
+	language: "en" | "zh_HK";
 }
 interface Props {
 	open: boolean;
@@ -35,7 +39,7 @@ export function NewTaskDialog({ open, onClose, create }: Props) {
 	const [sourceInput, setSourceInput] = React.useState("");
 	const [frequency, setFrequency] = React.useState<Frequency>("daily");
 	const [delivery, setDelivery] = React.useState<Delivery[]>(["in-app"]);
-	const [language, setLanguage] = React.useState<"en" | "zh-HK">("en");
+	const [language, setLanguage] = React.useState<"en" | "zh_HK">("en");
 
 	const canCreate = sourceInput.trim().length > 0;
 
@@ -116,10 +120,10 @@ export function NewTaskDialog({ open, onClose, create }: Props) {
 								<FormLabel>Language</FormLabel>
 								<Select
 									value={language}
-									onChange={(_, v) => v && setLanguage(v as "en" | "zh-HK")}
+									onChange={(_, v) => v && setLanguage(v as "en" | "zh_HK")}
 								>
 									<Option value="en">English</Option>
-									<Option value="zh-HK">繁中</Option>
+									<Option value="zh_HK">繁中</Option>
 								</Select>
 							</FormControl>
 							<Stack

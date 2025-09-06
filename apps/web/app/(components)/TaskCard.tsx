@@ -1,4 +1,5 @@
 "use client";
+import type { Task } from "@fincy/domains/types/task";
 import {
 	Button,
 	Card,
@@ -12,7 +13,6 @@ import {
 	Stack,
 	Typography,
 } from "@mui/joy";
-import type { Task } from "../../lib/tasks";
 
 interface Props {
 	task: Task;
@@ -24,7 +24,7 @@ interface Props {
 }
 
 const statusColor: Record<string, "success" | "neutral" | "danger"> = {
-	"done-today": "success",
+	done_today: "success",
 	scheduled: "neutral",
 	error: "danger",
 };
@@ -98,11 +98,11 @@ export function TaskCard({
 						color={statusColor[task.status]}
 						sx={{ fontSize: 10 }}
 					>
-						{task.status === "done-today"
+						{task.status === "done_today"
 							? "Done today"
 							: task.status === "scheduled"
 								? "Scheduled"
-								: "Error"}
+								: task.status}
 					</Chip>
 					<TaskMenu
 						onEdit={onEdit}

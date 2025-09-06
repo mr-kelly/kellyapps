@@ -1,6 +1,18 @@
 "use client";
-import { Box, Button, Sheet, Stack, Typography } from "@mui/joy";
-import type { Task } from "../../lib/tasks";
+import { useTRPC } from "@fincy/domains/trpcClient";
+import type { Task } from "@fincy/domains/types/task";
+import {
+	Box,
+	Button,
+	Chip,
+	Input,
+	Option,
+	Select,
+	Sheet,
+	Stack,
+	Typography,
+} from "@mui/joy";
+import { useState } from "react";
 
 interface Props {
 	task?: Task;
@@ -25,7 +37,37 @@ export function TaskDetailPanel({ task, onClose, regenerate, runOne }: Props) {
 			</Box>
 		);
 	const summary = task.lastSummary;
-	const isZh = task.language === "zh-HK";
+	const isZh = task.language === "zh_HK";
+	const trpc = useTRPC();
+	const updateMutation = trpc.tasks.update.useMutation();
+	const [editing, setEditing] = useState(false);
+	const [title, setTitle] = useState(task.title);
+	const [frequency, setFrequency] = useState<Task["frequency"]>(task.frequency);
+	const [language, setLanguage] = useState<Task["language"]>(task.language);
+	type DeliveryOption = Task["delivery"][number];
+	const [delivery, setDelivery] = useState<DeliveryOption[]>([
+		...task.delivery,
+	]);
+
+	function toggleDelivery(d: DeliveryOption) {
+		setDelivery((prev) =>
+			prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d],
+		);
+	}
+
+	function save() {
+		if (!task) return;
+		const langForApi = language === "zh_HK" ? ("zh-HK" as const) : language;
+		updateMutation.mutate(
+			{
+				id: task.id,
+				patch: { title, frequency, language: langForApi, delivery },
+			},
+			{
+				onSuccess: () => setEditing(false),
+			},
+		);
+	}
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
 			<Stack
@@ -39,16 +81,40 @@ export function TaskDetailPanel({ task, onClose, regenerate, runOne }: Props) {
 					borderColor: "neutral.outlinedBorder",
 				}}
 			>
-				<Box>
-					<Typography level="title-sm">{task.title}</Typography>
+				<Box
+					sx={{ display: "flex", flexDirection: "column", gap: 0.5, flex: 1 }}
+				>
+					{editing ? (
+						<Input
+							size="sm"
+							value={title}
+							onChange={(e) => setTitle(e.target.value)}
+						/>
+					) : (
+						<Typography level="title-sm" noWrap>
+							{task.title}
+						</Typography>
+					)}
 					<Typography level="body-xs" color="neutral">
-						{task.status === "done-today"
+						{task.status === "done_today"
 							? isZh
 								? "今日已生成"
 								: "Generated today"
 							: task.status}
 					</Typography>
 				</Box>
+				<Button
+					size="sm"
+					variant="soft"
+					onClick={() => (editing ? save() : setEditing(true))}
+					disabled={updateMutation.status === "pending"}
+				>
+					{editing
+						? updateMutation.status === "pending"
+							? "Saving..."
+							: "Save"
+						: "Edit"}
+				</Button>
 				<Button
 					onClick={onClose}
 					size="sm"
@@ -69,7 +135,53 @@ export function TaskDetailPanel({ task, onClose, regenerate, runOne }: Props) {
 					gap: 3,
 				}}
 			>
-				<Sheet variant="outlined" sx={{ p: 2, borderRadius: "lg" }}>
+				<Sheet
+					variant="outlined"
+					sx={{
+						p: 2,
+						borderRadius: "lg",
+						display: "flex",
+						flexDirection: "column",
+						gap: 1.5,
+					}}
+				>
+					{editing && (
+						<Stack direction="row" spacing={1} flexWrap="wrap">
+							<Select
+								size="sm"
+								value={frequency}
+								onChange={(_, v) => v && setFrequency(v as Task["frequency"])}
+								sx={{ minWidth: 120 }}
+							>
+								<Option value="daily">Daily</Option>
+								<Option value="weekly">Weekly</Option>
+								<Option value="realtime" disabled>
+									Realtime
+								</Option>
+							</Select>
+							<Select
+								size="sm"
+								value={language}
+								onChange={(_, v) => v && setLanguage(v as Task["language"])}
+								sx={{ minWidth: 120 }}
+							>
+								<Option value="en">English</Option>
+								<Option value="zh_HK">繁中</Option>
+							</Select>
+							<Stack direction="row" spacing={0.5}>
+								{(["in-app", "email", "im"] as DeliveryOption[]).map((d) => (
+									<Chip
+										key={d}
+										size="sm"
+										variant={delivery.includes(d) ? "solid" : "soft"}
+										onClick={() => toggleDelivery(d)}
+									>
+										{d}
+									</Chip>
+								))}
+							</Stack>
+						</Stack>
+					)}
 					<Stack
 						direction="row"
 						justifyContent="space-between"

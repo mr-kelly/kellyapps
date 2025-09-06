@@ -28,6 +28,15 @@ export default function TabLayout() {
 			}}
 		>
 			<Tabs.Screen
+				name="tasks"
+				options={{
+					title: "Tasks",
+					tabBarIcon: ({ color }) => (
+						<IconSymbol size={28} name="list.bullet" color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
 				name="index"
 				options={{
 					title: "Home",

@@ -26,3 +26,56 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum SourceType {
+  url
+  keyword
+  ticker
+}
+
+enum Frequency {
+  daily
+  weekly
+  realtime
+}
+
+enum OutputFormat {
+  summary
+  pdf
+  ppt
+}
+
+enum Language {
+  en
+  zh_HK
+}
+
+enum Timezone {
+  HKT
+  ET
+}
+
+enum TaskStatus {
+  done_today
+  scheduled
+  error
+}
+
+model Task {
+  id           String       @id @default(cuid())
+  title        String
+  sourceType   SourceType
+  sourceInput  String
+  frequency    Frequency
+  delivery     String // json encoded array (simple for now)
+  outputFormat OutputFormat
+  language     Language
+  triggerTime  String
+  timezone     Timezone
+  status       TaskStatus
+  lastRunAt    DateTime?
+  nextRunAt    DateTime?
+  lastSummary  Json?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
