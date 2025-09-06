@@ -9,7 +9,7 @@ import { useTRPC } from "@fincy/domains/trpcClient";
 
 export default function HomeScreen() {
 	const trpc = useTRPC();
-	const hello = trpc.tasks.hello.useQuery({ name: "Expo" });
+	const hello = trpc.util.hello.useQuery({ name: "Expo" });
 	return (
 		<ParallaxScrollView
 			headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}

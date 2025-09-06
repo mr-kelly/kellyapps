@@ -78,7 +78,7 @@ export default function HomePage() {
 		},
 		onSettled: () => listQuery.refetch(),
 	});
-	const hello = trpc.tasks.hello.useQuery({ name: "Web" });
+	const hello = trpc.util.hello.useQuery({ name: "Web" });
 	const tasks: Task[] = (listQuery.data as Task[] | undefined) ?? [];
 	const [selectedId, setSelectedId] = React.useState<string | undefined>();
 	const selected = tasks.find((t) => t.id === selectedId);
