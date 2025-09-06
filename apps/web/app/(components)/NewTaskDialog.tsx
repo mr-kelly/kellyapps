@@ -157,5 +157,3 @@ export function NewTaskDialog({ open, onClose, create }: Props) {
 		</Modal>
 	);
 }
-
-export default NewTaskDialog;

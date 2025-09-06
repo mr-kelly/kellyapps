@@ -48,5 +48,3 @@ export function QuickActionsBar({ onNew, onRunAll, onExport, running }: Props) {
 		</Sheet>
 	);
 }
-
-export default QuickActionsBar;

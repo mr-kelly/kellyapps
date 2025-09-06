@@ -309,5 +309,3 @@ function formatSummary(task: Task) {
 	if (!task.lastSummary) return "";
 	return `${task.title}\n${task.lastSummary.headlines.map((h) => `- ${h}`).join("\n")}\n${task.lastSummary.takeaways.map((t, i) => `${i + 1}. ${t}`).join("\n")}`;
 }
-
-export default TaskDetailPanel;

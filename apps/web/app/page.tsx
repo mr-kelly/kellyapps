@@ -4,11 +4,11 @@ import type { Task } from "@fincy/domains/types/task";
 import { Box, Button, Sheet, Stack, Typography } from "@mui/joy";
 import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
-import EmptyState from "./(components)/EmptyState";
-import NewTaskDialog from "./(components)/NewTaskDialog";
-import QuickActionsBar from "./(components)/QuickActionsBar";
-import TaskCard from "./(components)/TaskCard";
-import TaskDetailPanel from "./(components)/TaskDetailPanel";
+import { EmptyState } from "./(components)/EmptyState";
+import { NewTaskDialog } from "./(components)/NewTaskDialog";
+import { QuickActionsBar } from "./(components)/QuickActionsBar";
+import { TaskCard } from "./(components)/TaskCard";
+import { TaskDetailPanel } from "./(components)/TaskDetailPanel";
 
 export default function HomePage() {
 	const trpc = useTRPC();

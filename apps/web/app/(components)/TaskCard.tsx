@@ -157,5 +157,3 @@ function TaskMenu({
 		</Dropdown>
 	);
 }
-
-export default TaskCard;

@@ -39,5 +39,3 @@ export function EmptyState({ onCreate }: { onCreate: () => void }) {
 		</Sheet>
 	);
 }
-
-export default EmptyState;
