@@ -15,8 +15,8 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.7.0",
 		"concurrently": "^9.0.1",
-		"tsx": "^4.16.2",
-		"lefthook": "^1.7.0"
+		"lefthook": "^1.7.0",
+		"tsx": "^4.16.2"
 	},
 	"overrides": {
 		"react": "19.0.0",
