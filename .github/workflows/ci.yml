@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Test & Build (web) + Checks (mobile)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Prisma Client is needed at import time in server code; generate it before builds
+      - name: Generate Prisma Client
+        working-directory: packages/domains
+        run: npx -y prisma generate
+
+      - name: Test (web)
+        run: pnpm --filter @fincy/web test
+
+      - name: Build (web)
+        run: pnpm --filter @fincy/web build
+
+      - name: Typecheck (mobile)
+        run: pnpm --filter @fincy/mobile exec tsc -p tsconfig.json --noEmit
+
+      - name: Expo Doctor (mobile)
+        run: pnpm --filter @fincy/mobile exec expo doctor --fix-dependencies
+
+      - name: Build (mobile web export)
+        run: pnpm --filter @fincy/mobile exec expo export --platform web --dump-sourcemap --no-minify

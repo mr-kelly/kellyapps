@@ -16,3 +16,12 @@ lint:
 
 db-migrate:
 	pnpm --filter @fincy/domains prisma:migrate
+
+build:
+	pnpm --filter @fincy/web build
+	pnpm --filter @fincy/mobile build
+
+test:
+	pnpm --filter @fincy/web test
+	pnpm --filter @fincy/mobile test
+	pnpm --filter @fincy/domains test
